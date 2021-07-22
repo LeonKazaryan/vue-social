@@ -1,12 +1,44 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <component :is="layout">
+       <router-view/>
+    </component>
+
   </div>
 </template>
+
+<script>
+
+export default{
+  name: "App",
+  computed: {
+    layout(){
+      const result = this.$route.meta.layout || "MainLayout";
+      return result;
+    },
+  },
+
+   created() {
+        const user = localStorage.getItem('user');
+        if (user) {
+            this.$store.commit('SET_USER', JSON.parse(user));
+        }
+    },
+
+  components: {
+      AuthLayout: () => import("@/layouts/AuthLayout.vue"),
+      MainLayout: () => import("@/layouts/MainLayout.vue"),
+  },
+
+  mounted(){
+    console.log(this.$route);
+  }
+  
+
+}
+
+</script>
+
 
 <style>
 #app {
